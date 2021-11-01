@@ -1,22 +1,22 @@
-package dependency
+package main
 
 import (
 	"time"
 )
 
-const (
-	interval = 5
-)
+type Actionable interface {
+	Do() error
+}
 
 type Cron struct {
 	ticker   *time.Ticker
 	interval time.Duration
-	cleaner  *DBCleaner
+	action   Actionable
 }
 
-func NewCron() *Cron {
+func NewCron(interval time.Duration, actionable Actionable) *Cron {
 	return &Cron{
-		cleaner:  NewDBCleaner(),
+		action:   actionable,
 		interval: interval * time.Minute,
 	}
 }
@@ -28,7 +28,7 @@ func (c *Cron) Init() {
 		for {
 			select {
 			case <-c.ticker.C:
-				if err := c.cleaner.Clean(); err != nil {
+				if err := c.action.Do(); err != nil {
 					c.ticker.Stop()
 				}
 			}

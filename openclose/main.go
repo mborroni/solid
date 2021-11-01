@@ -12,9 +12,8 @@ func main() {
 	}
 
 	filter := ProductFilter{}
-	filteredProducts := filter.FilterByColor(products, green)
-	// filteredProducts := filter.FilterBySize(products, small)
-	// filteredProducts := filter.FilterByColorAndSize(products, green, medium)
+	filteredProducts := filter.FilterByCriteria(products, ColorCriteria{Color: green})
+	// filteredProducts := filter.FilterByCriteria(products, SizeCriteria{Size: small})
 
 	fmt.Println("filtered products\n")
 	for _, product := range filteredProducts {
